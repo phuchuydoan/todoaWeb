@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Solo Leveling Mission Board</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+        color: #e0e0e0;
+        font-family: "Orbitron", Arial, sans-serif;
+        background-image: url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80");
+        background-size: cover;
+        background-blend-mode: multiply;
+      }
+      .overlay {
+        background: rgba(15, 32, 39, 0.85);
+        min-height: 100vh;
+        padding: 0;
+        margin: 0;
+      }
+      header {
+        text-align: center;
+        padding: 2rem 0 1rem 0;
+        letter-spacing: 2px;
+      }
+      h1 {
+        font-size: 2.8rem;
+        color: #00ffe7;
+        text-shadow: 0 0 15px #00ffe7, 0 0 5px #222;
+        margin-bottom: 0.5rem;
+      }
+      h2 {
+        color: #fff;
+        margin-bottom: 1.5rem;
+        font-size: 1.3rem;
+        font-weight: 400;
+        letter-spacing: 1px;
+      }
+      .mission-board {
+        max-width: 500px;
+        margin: 2rem auto;
+        background: rgba(44, 83, 100, 0.85);
+        border-radius: 16px;
+        box-shadow: 0 0 30px #00ffe7a0;
+        padding: 2rem;
+      }
+      .add-mission {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .add-mission input {
+        flex: 1;
+        padding: 0.7rem;
+        border-radius: 8px;
+        border: none;
+        font-size: 1rem;
+        background: #1a2a36;
+        color: #fff;
+        outline: none;
+      }
+      .add-mission button {
+        background: #00ffe7;
+        color: #222;
+        border: none;
+        border-radius: 8px;
+        padding: 0.7rem 1.2rem;
+        font-size: 1rem;
+        font-family: "Orbitron", Arial, sans-serif;
+        cursor: pointer;
+        transition: background 0.2s;
+        font-weight: bold;
+        box-shadow: 0 0 10px #00ffe7a0;
+      }
+      .add-mission button:hover {
+        background: #00bfae;
+      }
+      ul.missions {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      ul.missions li {
+        background: rgba(15, 32, 39, 0.85);
+        margin-bottom: 1rem;
+        padding: 1rem;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 0 10px #00ffe740;
+        transition: background 0.2s;
+      }
+      ul.missions li.completed {
+        background: rgba(0, 255, 231, 0.15);
+        text-decoration: line-through;
+        color: #00ffe7;
+        opacity: 0.7;
+      }
+      .mission-actions button {
+        background: none;
+        border: none;
+        color: #00ffe7;
+        font-size: 1.2rem;
+        cursor: pointer;
+        margin-left: 0.5rem;
+        transition: color 0.2s;
+      }
+      .mission-actions button:hover {
+        color: #fff;
+      }
+      @media (max-width: 600px) {
+        .mission-board {
+          padding: 1rem;
+        }
+        h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="overlay">
+      <header>
+        <h1>SOLO LEVELING</h1>
+        <h2>Mission Board: Complete Your Hunter Tasks</h2>
+      </header>
+      <main>
+        <section class="mission-board">
+          <form class="add-mission" id="missionForm">
+            <input
+              type="text"
+              id="missionInput"
+              placeholder="Enter your mission (e.g., Defeat the Dungeon Boss)"
+              autocomplete="off"
+              required
+            />
+            <button type="submit">Add</button>
+          </form>
+          <ul class="missions" id="missionsList"></ul>
+        </section>
+      </main>
+    </div>
+    <script>
+      const missionForm = document.getElementById("missionForm");
+      const missionInput = document.getElementById("missionInput");
+      const missionsList = document.getElementById("missionsList");
+
+      let missions = [];
+
+      function renderMissions() {
+        missionsList.innerHTML = "";
+        missions.forEach((mission, idx) => {
+          const li = document.createElement("li");
+          li.className = mission.completed ? "completed" : "";
+          li.innerHTML = `
+          <span>${mission.text}</span>
+          <span class="mission-actions">
+            <button title="Complete" onclick="completeMission(${idx})">&#10003;</button>
+            <button title="Delete" onclick="deleteMission(${idx})">&#10005;</button>
+          </span>
+        `;
+          missionsList.appendChild(li);
+        });
+      }
+
+      window.completeMission = function (idx) {
+        missions[idx].completed = !missions[idx].completed;
+        renderMissions();
+      };
+
+      window.deleteMission = function (idx) {
+        missions.splice(idx, 1);
+        renderMissions();
+      };
+
+      missionForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const text = missionInput.value.trim();
+        if (text) {
+          missions.push({ text, completed: false });
+          missionInput.value = "";
+          renderMissions();
+        }
+      });
+
+      // Initial render
+      renderMissions();
+    </script>
+  </body>
+</html>
